@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -25,10 +24,10 @@ class StudentController extends Controller
             'jurusan' => $request->jurusan,
         ];
 
-        $students = Student::create($input);
+        $student = Student::create($input);
         $data = [
             'message' => 'Student is created successfully',
-            'data' => $students
+            'data' => $student
         ];
 
         return response()->json($data, 201);
@@ -37,27 +36,46 @@ class StudentController extends Controller
     public function update(Request $request, $id){
         $student = Student::find($id);
         
-        if (!$student) {
-            return response()->json(['message' => 'Student not found'], 404);
+        if ($student) {
+            $input = [
+                'nama' => $request->nama ?? $student->nama,
+                'nim' => $request->nim ?? $student->nim,
+                'email' => $request->email ?? $student->email,
+                'jurusan' => $request->jurusan ?? $student->jurusan,
+            ];   
+            
+            $student->update($input);
+    
+            $data =[
+                'message' => 'Student is updated successfully',
+                'data' => $student
+            ];
+            
+            return response()->json($data, 200);
+        } else {
+            $data =[
+                'message' => 'Student not found'
+            ];
+            
+            return response()->json($data, 404);
         }
-
-        $student->update($request->all());
-        $data = [
-            'message' => 'Student is updated successfully',
-            'data' => $student
-        ];
-
-        return response()->json($data, 200);
     }
-
+    
     public function destroy($id){
         $student = Student::find($id);
         
-        if (!$student) {
-            return response()->json(['message' => 'Student not found'], 404);
-        }
+        if ($student) {
+            $student->delete();
 
-        $student->delete();
-        return response()->json(['message' => 'Student is deleted successfully'], 200);
+            $data = [
+                'message' => 'Student is deleted successfully'
+            ];
+            return response()->json($data, 200);
+        } else {
+            $data = [
+                'message' => 'Student not found'
+            ];
+            return response()->json($data, 404);
+        }
     }
 }
