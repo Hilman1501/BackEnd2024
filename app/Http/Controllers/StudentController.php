@@ -39,7 +39,7 @@ class StudentController extends Controller
         // Buat data mahasiswa baru
         $student = Student::create($request->all());
     
-        // Kembalikan respons sukses
+        //  respons sukses
         return response()->json([
             'message' => 'Mahasiswa berhasil dibuat',
             'data' => $student
